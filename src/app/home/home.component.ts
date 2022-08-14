@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { HomeController, LinksResult } from './home.controller';
 
 @Component({
   selector: 'app-home',
@@ -8,8 +9,10 @@ import { Component, OnInit } from '@angular/core';
 export class HomeComponent implements OnInit {
 
   constructor() { }
-
-  ngOnInit() {
+  result?: LinksResult;
+  async ngOnInit() {
+    let id =+new URLSearchParams(window.location.search).get('id')!;
+    this.result = await HomeController.getLinks(id);
   }
 }
 
