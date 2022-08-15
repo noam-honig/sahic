@@ -10,13 +10,15 @@ import { ShowDialogOnErrorErrorHandler } from './common/dialog';
 import { JwtModule } from '@auth0/angular-jwt';
 import { AuthService } from './auth.service';
 import { terms } from './terms';
+import { AttendanceComponent } from './attendance/attendance.component';
 
 const defaultRoute = 'links';
 const routes: Routes = [
-  { path: defaultRoute+'/:id', component: HomeComponent },
+  { path: defaultRoute + '/:id', component: HomeComponent },
   { path: defaultRoute, component: HomeComponent },
+  { path: 'test', component: AttendanceComponent },
   { path: terms.userAccounts, component: UsersComponent, canActivate: [AdminGuard] },
-  { path: '**', redirectTo: '/'+defaultRoute, pathMatch: 'full' }
+  { path: '**', redirectTo: '/' + defaultRoute, pathMatch: 'full' }
 
 ];
 

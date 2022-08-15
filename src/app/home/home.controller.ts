@@ -2,9 +2,9 @@ import { BackendMethod, Remult } from "remult";
 import { gql } from "./getGraphQL";
 
 export class HomeController {
-    @BackendMethod({ allowed: true })
-    static async getLinks(id: number) {
-        const first = await gql(`query ($id: Int!) {
+  @BackendMethod({ allowed: true })
+  static async getLinks(id: number) {
+    const first = await gql(`query ($id: Int!) {
             boards(ids: [3087291764]) {
               id
               name
@@ -19,18 +19,46 @@ export class HomeController {
               }
             }
           }`, {
-            id: id
-        });
-        const r: LinksResult = first.boards[0].items[0];
+      id: id
+    });
+    const r: LinksResult = first.boards[0].items[0];
 
-        if (r?.column_values)
-            r.column_values = r.column_values.filter(x => x.value?.toLocaleLowerCase().startsWith("\"https")).map(y => ({ ...y, value: JSON.parse(y.value) }));
+    if (r?.column_values)
+      r.column_values = r.column_values.filter(x => x.value?.toLocaleLowerCase().startsWith("\"https")).map(y => ({ ...y, value: JSON.parse(y.value) }));
 
-        return r;
-    }
+    return r;
+  }
+  @BackendMethod({ allowed: true })
+  static async getTeenagers() {
+    const result: {
+      name: string,
+      items: {
+        id: number,
+        name: string,
+        attended?: boolean
+      }[]
+    } = await gql(`query  {
+      boards (ids:[1363121136]){
+        id
+        name
+        board_folder_id
+        board_kind,
+        items{
+          id
+          name
+        
+        }
+      
+       
+        
+      }
+    }`, {}).then(x => x.boards[0]);
+    return result;
+  }
+
 }
 
 export interface LinksResult {
-    name: string,
-    column_values: { title: string, value: string }[]
+  name: string,
+  column_values: { title: string, value: string }[]
 }

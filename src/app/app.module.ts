@@ -23,6 +23,7 @@ import { YesNoQuestionComponent } from './common/yes-no-question/yes-no-question
 import { InputAreaComponent } from './common/input-area/input-area.component';
 import { DialogService } from './common/dialog';
 import { AdminGuard } from "./users/AdminGuard";
+import { AttendanceComponent } from './attendance/attendance.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { AdminGuard } from "./users/AdminGuard";
     UsersComponent,
     HomeComponent,
     YesNoQuestionComponent,
-    InputAreaComponent
+    InputAreaComponent,
+    AttendanceComponent
   ],
   imports: [
     BrowserModule,

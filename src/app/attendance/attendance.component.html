@@ -1,0 +1,35 @@
+<div style="    display: flex;
+justify-content: center;">
+    <div
+        *ngIf="result"
+        style="display: flex;
+flex-direction: column;
+gap: 16px;
+margin: 8px;
+max-width:350px;
+width:100%;"
+    >
+        <img src="assets/logo.png">
+        <h1>{{result.name}}</h1>
+        <data-area [settings]="area"></data-area>
+        <mat-nav-list>
+            <ng-container *ngFor="let t of result.items;trackBy:trackBy">
+                <mat-list-item
+                    *ngIf="matchSearch(t)"
+                    (click)="t.attended=!t.attended"
+                >
+                    <mat-checkbox [(ngModel)]="t.attended" (click)="$event.preventDefault()"> {{t.name}}</mat-checkbox>
+                </mat-list-item>
+            </ng-container>
+
+        </mat-nav-list>
+        <button
+            mat-raised-button
+            color="primary"
+        >
+            שלח
+        </button>
+
+    </div>
+
+</div>
