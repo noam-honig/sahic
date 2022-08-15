@@ -19,6 +19,7 @@ width:100%;"
                     (click)="t.attended=!t.attended"
                 >
                     <mat-checkbox [(ngModel)]="t.attended" (click)="$event.preventDefault()"> {{t.name}}</mat-checkbox>
+                    <mat-divider></mat-divider>
                 </mat-list-item>
             </ng-container>
 
