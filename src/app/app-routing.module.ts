@@ -11,8 +11,9 @@ import { JwtModule } from '@auth0/angular-jwt';
 import { AuthService } from './auth.service';
 import { terms } from './terms';
 
-const defaultRoute = terms.home;
+const defaultRoute = 'links';
 const routes: Routes = [
+  { path: defaultRoute+'/:id', component: HomeComponent },
   { path: defaultRoute, component: HomeComponent },
   { path: terms.userAccounts, component: UsersComponent, canActivate: [AdminGuard] },
   { path: '**', redirectTo: '/'+defaultRoute, pathMatch: 'full' }

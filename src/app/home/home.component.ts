@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { HomeController, LinksResult } from './home.controller';
 
 @Component({
@@ -8,11 +9,12 @@ import { HomeController, LinksResult } from './home.controller';
 })
 export class HomeComponent implements OnInit {
 
-  constructor() { }
+  constructor(private route: ActivatedRoute) { }
   result?: LinksResult;
   async ngOnInit() {
-    let id =+new URLSearchParams(window.location.search).get('id')!;
-    this.result = await HomeController.getLinks(id);
+    let id = +this.route.snapshot.params['id'!];
+    if (id)
+      this.result = await HomeController.getLinks(id);
   }
 }
 
