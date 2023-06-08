@@ -16,6 +16,14 @@ export class HomeController {
                   title
                   value
                 }
+                subitems {
+                  name
+                  column_values {
+                    id
+                    title
+                    value
+                  }
+                }
               }
             }
           }`, {
@@ -25,7 +33,17 @@ export class HomeController {
 
     if (r?.column_values)
       r.column_values = r.column_values.filter(x => x.value?.toLocaleLowerCase().startsWith("\"https")).map(y => ({ ...y, value: JSON.parse(y.value) }));
-
+    if (r.subitems) {
+      for (const s of r.subitems) {
+        let link = s.column_values.find(x => x.value?.toLocaleLowerCase().startsWith("\"https"))
+        if (link)
+          r.column_values.push({
+            title: s.name,
+            value: JSON.parse(link.value)
+          })
+      }
+    }
+    delete r.subitems;
     return r;
   }
   @BackendMethod({ allowed: true })
@@ -61,4 +79,5 @@ export class HomeController {
 export interface LinksResult {
   name: string,
   column_values: { title: string, value: string }[]
+  subitems?: LinksResult[]
 }
