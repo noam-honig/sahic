@@ -52,7 +52,7 @@ export class AttendanceForm extends ControllerBase {
     return await getTeenagers(board);
   }
 
-  @BackendMethod({ allowed: true })
+  @BackendMethod({ allowed: true, queue: true })
   async save(boardId: number) {
     const r = await getTeenagers(boardId, true);
     const columns = await getAttendanceBoard(r);
