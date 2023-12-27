@@ -1,5 +1,6 @@
 import { BackendMethod, Remult } from 'remult';
 import { gql } from './getGraphQL';
+import { getTeenagers } from '../attendance/getTeenagers';
 
 export class HomeController {
   @BackendMethod({ allowed: true })
@@ -61,36 +62,6 @@ export class HomeController {
     }
     delete r.subitems;
     return r;
-  }
-  @BackendMethod({ allowed: true })
-  static async getTeenagers() {
-    const result: {
-      name: string;
-      items: {
-        id: number;
-        name: string;
-        attended?: boolean;
-      }[];
-    } = await gql(
-      `query  {
-      boards (ids:[1363121136]){
-        id
-        name
-        board_folder_id
-        board_kind,
-        items{
-          id
-          name
-        
-        }
-      
-       
-        
-      }
-    }`,
-      {}
-    ).then((x) => x.boards[0]);
-    return result;
   }
 }
 
