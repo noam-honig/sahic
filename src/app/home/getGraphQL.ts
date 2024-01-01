@@ -1,4 +1,5 @@
 export async function gql(s: string, variables?: any, authorization?: string) {
+  //console.log('monday gql', s, variables);
   const fetch = await import('node-fetch');
   if (!authorization) authorization = process.env['MONDAY_API_TOKEN']!;
   while (true) {

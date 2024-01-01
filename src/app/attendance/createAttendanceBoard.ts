@@ -4,88 +4,29 @@ import {
   updateAttendanceBoardIdToDescription,
 } from './getTeenagers';
 
-export async function getAttendanceBoard(r: TeenagersResult) {
-  if (!r.attendance) {
-    r.attendance = await createAttendanceBoard(r);
-  }
-  const columns: Column[] = (
-    await gql(
-      `#graphql
-query($board:ID!){
-  boards(ids:[$board]){
-    columns{
-      id
-      title
-      type
-    }
-  }
-}
-
-  `,
-      {
-        board: +r.attendance,
-      }
-    )
-  ).boards[0].columns;
-
-  await verifyColumn('date', 'תאריך הפעילות', 'date');
-  await verifyColumn('hours', 'שעות הפעילות', 'numbers');
-  await verifyColumn('type', 'סוג הפעילות', 'text');
-  for (const item of r.items) {
-    await verifyColumn('t' + item.id, item.name, 'checkbox');
-  }
-
-  return columns;
-
-  async function verifyColumn(
-    id: string,
-    title: string,
-    column_type: 'date' | 'checkbox' | 'text' | 'numbers'
-  ) {
-    if (!columns.find((x) => x.id == id)) {
-      columns.push(
-        (
-          await gql(
-            `#graphql
-  mutation ($board: ID!,$id:String!,$title:String!,$column_type:ColumnType!) {
-    create_column(
-      board_id: $board
-      id: $id
-      title: $title
-      column_type: $column_type
-    ) {
-      id
-      title
-      type
-    }
-  }
-  `,
-            {
-              board: +r.attendance!,
-              id,
-              title,
-              column_type,
-            }
-          )
-        ).create_column
-      );
-    }
-  }
-}
-
-export async function createAttendanceBoard(r: TeenagersResult) {
+export async function createAttendanceBoard(
+  mainBoard: TeenagersResult,
+  boardName: string,
+  keyInDescription: string
+) {
   const board: { create_board: { id: number } } = await gql(
     `#graphql
-mutation ($name:String!){
-  create_board(workspace_id:4200186,board_name:$name,  board_kind:public,empty:true  ){
+mutation ($name:String!,$description:String!){
+  create_board(workspace_id:4200186,board_name:$name, description:$description,  board_kind:share,empty:true  ){
     id
   }
 }`,
     {
-      name: r.name + ' נוכחות',
+      name: boardName + ' נוכחות',
+      description: `מבוסס על ${mainBoard.name} ${mainBoard.id}`,
     }
   );
-  r.attendance = board.create_board.id.toString();
+  const result = board.create_board.id.toString();
+  mainBoard.description = updateAttendanceBoardIdToDescription(
+    mainBoard.description!,
+    +result,
+    keyInDescription
+  );
   await gql(
     `#graphql
 mutation ($board: ID!, $description: String!) {
@@ -96,17 +37,9 @@ mutation ($board: ID!, $description: String!) {
   ) 
 }`,
     {
-      board: r.id,
-      description: updateAttendanceBoardIdToDescription(
-        r.description!,
-        board.create_board.id
-      ),
+      board: mainBoard.id,
+      description: mainBoard.description,
     }
   );
-  return r.attendance;
-}
-interface Column {
-  id: string;
-  title: string;
-  type: string;
+  return result;
 }

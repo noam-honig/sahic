@@ -74,6 +74,15 @@ export class AttendanceComponent implements OnInit {
     else this.form.attending.push(id);
     this.saveToLocal();
   }
+  toggleVolunteer(id: number) {
+    if (this.form.attendingVolunteers.includes(id))
+      this.form.attendingVolunteers.splice(
+        this.form.attendingVolunteers.indexOf(id),
+        1
+      );
+    else this.form.attendingVolunteers.push(id);
+    this.saveToLocal();
+  }
 
   trackBy(i: number, item: { name: string; id: number }) {
     return item.id;

@@ -4,6 +4,42 @@ export async function getTeenagers(
   board: number,
   internal = false
 ): Promise<TeenagersResult> {
+  const result = await getBoardMembers(board);
+  if (!result) throw 'טופס נוכחות לא נמצא';
+  function getValueFromDescription(key: string) {
+    return result.description
+      ?.split('\n')
+      .map((x) => x.split(':'))
+      .find((x) => x[0]?.trim() == key)?.[1]
+      ?.trim();
+  }
+
+  if (getValueFromDescription(ATTENDANCE_KEY)?.trim() != 'כן') {
+    throw 'טופס נוכחות לא פתוח';
+  }
+  if (internal) {
+    result.attendance = getValueFromDescription(ATTENDANCE_BOARD_KEY);
+    result.volunteerAttendance = getValueFromDescription(
+      VOLUNTEER_ATTENDANCE_BOARD_KEY
+    );
+  } else {
+    delete result.attendance;
+  }
+  const volunteerBoard = getValueFromDescription(VOLUNTEER_BOARD_KEY);
+  if (volunteerBoard) {
+    const volunteers = await getBoardMembers(+volunteerBoard);
+    result.volunteers = volunteers.items;
+    result.volunteersBoardName = volunteers.name;
+  }
+
+  return result;
+}
+
+export const ATTENDANCE_BOARD_KEY = 'לוח נוכחות';
+export const ATTENDANCE_KEY = 'דיווח נוכחות';
+export const VOLUNTEER_BOARD_KEY = 'לוח מתנדבים';
+export const VOLUNTEER_ATTENDANCE_BOARD_KEY = 'לוח נוכחות מתנדבים';
+async function getBoardMembers(board: number) {
   const result: TeenagersResult = await gql(
     `#graphql
 query ($board: ID!) {
@@ -23,43 +59,21 @@ query ($board: ID!) {
       board,
     }
   ).then((x) => x.boards[0]);
-  if (!result) throw 'טופס נוכחות לא נמצא';
-  let attendanceLine = result.description
-    ?.split('\n')
-    .find((x) => x.trim().startsWith(ATTENDANCE_KEY))
-    ?.split(':');
-  if (attendanceLine?.[1]?.trim() != 'כן') {
-    throw 'טופס נוכחות לא פתוח';
-  }
-  result.attendance = result.description
-    ?.split('\n')
-    .find((x) => x.trim().startsWith(ATTENDANCE_BOARD_KEY))
-    ?.split(':')[1]
-    ?.trim();
-  if (!internal) {
-    delete result.description;
-    delete result.attendance;
-  }
   result.items = (result as any).items_page.items;
   delete (result as any).items_page;
   result.items.sort((a, b) => a.name.localeCompare(b.name));
   return result;
 }
 
-export const ATTENDANCE_BOARD_KEY = 'לוח נוכחות';
-export const ATTENDANCE_KEY = 'דיווח נוכחות';
 export function updateAttendanceBoardIdToDescription(
   description: string,
-  id: number
+  id: number,
+  key: string
 ) {
   const lines = description
     .split('\n')
-    .filter((x) => !x.trim().startsWith(ATTENDANCE_BOARD_KEY));
-  lines.splice(
-    lines.findIndex((x) => x.trim().startsWith(ATTENDANCE_KEY)) + 1,
-    0,
-    `${ATTENDANCE_BOARD_KEY}: ${id}`
-  );
+    .filter((x) => !x.trim().startsWith(key));
+  lines.push(`${key}: ${id}`);
   return lines.join('\n');
 }
 export interface TeenagersResult {
@@ -67,9 +81,14 @@ export interface TeenagersResult {
   description?: string | undefined;
   name: string;
   attendance?: string | undefined;
+  volunteerAttendance?: string | undefined;
   items: {
     id: number;
     name: string;
-    attended?: boolean;
+  }[];
+  volunteersBoardName?: string;
+  volunteers: {
+    id: number;
+    name: string;
   }[];
 }

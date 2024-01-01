@@ -29,14 +29,36 @@
           </mat-list-item>
         </ng-container>
       </mat-nav-list>
+      <h3 style="text-decoration: underline; text-align: center">
+        {{ result.volunteersBoardName }}
+      </h3>
+      <mat-nav-list>
+        <ng-container *ngFor="let t of result.volunteers; trackBy: trackBy">
+          <mat-list-item *ngIf="matchSearch(t)" (click)="toggleVolunteer(t.id)">
+            <mat-checkbox
+              [checked]="form.attendingVolunteers.includes(t.id)"
+              (click)="$event.preventDefault()"
+              color="primary"
+            >
+              {{ t.name }}</mat-checkbox
+            >
+            <mat-divider></mat-divider>
+          </mat-list-item>
+        </ng-container>
+      </mat-nav-list>
       <data-area [settings]="area"></data-area>
+      <mat-form-field class="example-full-width" [appearance]="'outline'">
+        <mat-label>הערות</mat-label>
+        <textarea matInput rows="5" [(ngModel)]="form.notes"></textarea>
+      </mat-form-field>
       <button
         mat-raised-button
         color="primary"
         (click)="save()"
-        [disabled]="form.attending.length < 1"
+        [disabled]="form.attending.length + form.attendingVolunteers.length < 1"
       >
         שלח {{ form.attending.length }} נוכחים
+        {{ form.attendingVolunteers.length }} מתנדבים
       </button>
       <button mat-raised-button color="error" (click)="clear()">מחק</button>
     </ng-container>
