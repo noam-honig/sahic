@@ -9,6 +9,10 @@ import { getJwtSecret } from '../app/users/SignInController';
 import fs from 'fs';
 import { gql } from '../app/home/getGraphQL';
 import { HomeController } from '../app/home/home.controller';
+import {
+  ATTENDANCE_KEY,
+  getValueFromDescription,
+} from '../app/attendance/getTeenagers';
 
 async function startup() {
   const app = express();
@@ -52,11 +56,20 @@ query ($id: ID!) {
     boards(ids: [$id]) {
         id
         name
+        description
     }
 }
     `,
         { id: req.params.id }
       );
+      let title = result.boards[0].name;
+      const open = getValueFromDescription(
+        result.boards[0].description,
+        ATTENDANCE_KEY
+      );
+      if (open != 'כן') {
+        title = 'טופס נוכחות לא פתוח';
+      }
 
       sendIndex(res, 'סח"י מי בא? ' + result.boards[0].name);
     } catch (err: any) {

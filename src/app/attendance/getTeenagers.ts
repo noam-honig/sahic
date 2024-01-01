@@ -92,3 +92,10 @@ export interface TeenagersResult {
     name: string;
   }[];
 }
+export function getValueFromDescription(description: string, key: string) {
+  return description
+    ?.split('\n')
+    .map((x) => x.split(':'))
+    .find((x) => x[0]?.trim() == key)?.[1]
+    ?.trim();
+}
