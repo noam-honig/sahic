@@ -78,7 +78,7 @@ query ($id: ID!) {
         .toString();
       if (title)
         index = index.replace(
-          "מערכת צ'יפים סחי",
+          /מערכת צ'יפים סחי/g,
           `${title.replace(/"/g, '&quot;')}`
         );
       res.send(index);
