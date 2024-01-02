@@ -35,11 +35,12 @@ export class AttendanceForm extends ControllerBase {
   date = new Date().toISOString().split('T')[0];
   @Fields.number({
     caption: 'שעות פעילות',
+    inputType: 'tel',
     validate: (_, r) => {
       if (Number(r.value) < 1 || Number(r.value) > 100) throw 'ערך לא תקין';
     },
   })
-  hours = 0;
+  hours = '';
   @Fields.string({ caption: 'סוג פעילות', validate: Validators.required })
   @DataControl({
     valueList: [
