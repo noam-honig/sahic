@@ -24,6 +24,7 @@ import { InputAreaComponent } from './common/input-area/input-area.component';
 import { DialogService } from './common/dialog';
 import { AdminGuard } from "./users/AdminGuard";
 import { AttendanceComponent } from './attendance/attendance.component';
+import { MilgaiComponent } from './milgai/milgai.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { AttendanceComponent } from './attendance/attendance.component';
     HomeComponent,
     YesNoQuestionComponent,
     InputAreaComponent,
-    AttendanceComponent
+    AttendanceComponent,
+    MilgaiComponent
   ],
   imports: [
     BrowserModule,

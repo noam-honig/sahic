@@ -10,12 +10,14 @@ import { JwtModule } from '@auth0/angular-jwt';
 import { AuthService } from './auth.service';
 import { terms } from './terms';
 import { AttendanceComponent } from './attendance/attendance.component';
+import { MilgaiComponent } from './milgai/milgai.component';
 
 const defaultRoute = 'links';
 const routes: Routes = [
   { path: defaultRoute + '/:id', component: HomeComponent },
   { path: defaultRoute, component: HomeComponent },
   { path: 'a/:id', component: AttendanceComponent },
+  { path: 'm/:id', component: MilgaiComponent },
   {
     path: terms.userAccounts,
     component: UsersComponent,

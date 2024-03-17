@@ -9,11 +9,12 @@ import { gql } from '../app/home/getGraphQL';
 import { test } from '../app/attendance/attendance';
 import { getTeenagers } from 'src/app/attendance/getTeenagers';
 import { AttendanceForm } from '../app/attendance/AttendanceForm';
+import { HourReport, MilgaiController } from '../app/milgai/milgai.controller';
 config(); //loads the configuration from the .env file
 
 export const api = remultExpress({
   entities: [], //[User],
-  controllers: [HomeController, AttendanceForm], // [SignInController, UpdatePasswordController],
+  controllers: [HomeController, AttendanceForm, MilgaiController, HourReport], // [SignInController, UpdatePasswordController],
   dataProvider: async () => {
     if (process.env['NODE_ENV'] === 'production' && false)
       return createPostgresConnection({ configuration: 'heroku' });
