@@ -11,9 +11,11 @@ import { AuthService } from './auth.service';
 import { terms } from './terms';
 import { AttendanceComponent } from './attendance/attendance.component';
 import { MilgaiComponent } from './milgai/milgai.component';
+import { TestComponent } from './test/test.component';
 
 const defaultRoute = 'links';
 const routes: Routes = [
+  { path: 'test', component: TestComponent },
   { path: defaultRoute + '/:id', component: HomeComponent },
   { path: defaultRoute, component: HomeComponent },
   { path: 'a/:id', component: AttendanceComponent },

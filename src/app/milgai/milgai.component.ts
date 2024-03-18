@@ -4,7 +4,8 @@ import { HourReport, MilgaiController, MilgaiInfo } from './milgai.controller';
 import { openDialog } from '@remult/angular';
 import { DialogService } from '../common/dialog';
 import { InputAreaComponent } from '../common/input-area/input-area.component';
-import { Fields } from 'remult';
+import { Fields, getFields } from 'remult';
+import { CustomTimeDataControlComponent } from '../custom-time-input/custom-time-input.component';
 
 @Component({
   selector: 'app-milgai',
@@ -44,7 +45,20 @@ export class MilgaiComponent implements OnInit {
       (x) =>
         (x.args = {
           title: 'הוספת דיווח',
-          object: report,
+          fields: () => {
+            const f = getFields(report);
+            return [
+              f.date,
+              {
+                field: f.fromTime,
+                customComponent: { component: CustomTimeDataControlComponent },
+              },
+              {
+                field: f.toTime,
+                customComponent: { component: CustomTimeDataControlComponent },
+              },
+            ];
+          },
           ok: async () => {
             this.result = await report.save(this.result!.id);
           },

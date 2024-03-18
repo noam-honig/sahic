@@ -1,0 +1,20 @@
+<div>
+  <button mat-icon-button (click)="now()">
+    <mat-icon>schedule</mat-icon>
+  </button>
+  <select
+    #exchange
+    [(ngModel)]="minutes"
+    (change)="ngModelChange.emit(ngModel)"
+  >
+    <option [value]="'--'">--</option>
+    <option [value]="'00'">00</option>
+    <option [value]="'15'">15</option>
+    <option [value]="'30'">30</option>
+    <option [value]="'45'">45</option>
+  </select>
+  <span>:</span>
+  <select #area [(ngModel)]="hour" (change)="ngModelChange.emit(ngModel)">
+    <option *ngFor="let h of hours" [value]="h">{{ h }}</option>
+  </select>
+</div>
