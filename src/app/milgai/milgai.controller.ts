@@ -73,8 +73,11 @@ query($id:ID!,$stringId:CompareValue!)
     );
     if (!r.items[0]) throw Error('לא נמצא');
     function get(what: string) {
-      return r.items[0].column_values.find((c: any) => c.column.title == what)
-        .text;
+      let column = r.items[0].column_values.find(
+        (c: any) => c.column.title == what
+      );
+      if (!column) throw Error('בלוח מונדי, לא נמצאה עמודה ' + what);
+      return column.text;
     }
     if (get('אופי התנדבות') != 'מלגאי/ת') {
       throw Error('אופי התנדבות אינו מלגאי');
