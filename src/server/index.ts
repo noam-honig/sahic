@@ -48,6 +48,9 @@ async function startup() {
       res.status(500).json(err.message);
     }
   });
+  app.get('/m/:id', async (req, res) => {
+    sendIndex(res, 'סחי מלגאים');
+  });
   app.get('/a/:id', async (req, res) => {
     try {
       const result = await gql(

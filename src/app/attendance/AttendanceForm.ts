@@ -12,7 +12,7 @@ import {
   getTeenagers,
 } from './getTeenagers';
 import { createAttendanceBoard } from './createAttendanceBoard';
-import { gql } from '../home/getGraphQL';
+import { gql, insertItem } from '../home/getGraphQL';
 
 @Controller('attendance')
 export class AttendanceForm extends ControllerBase {
@@ -140,23 +140,7 @@ export class AttendanceForm extends ControllerBase {
       values['t' + item] = { checked: 'true' };
     }
 
-    await gql(
-      `#graphql
-  mutation z($board: ID!, $name: String!, $values: JSON) {
-  create_item(board_id: $board, item_name: $name, column_values: $values) {
-    id
-    column_values {
-      id
-      value
-    }
-  }
-}`,
-      {
-        board: attendanceBoard!,
-        name: this.name,
-        values: JSON.stringify(values),
-      }
-    );
+    await insertItem(attendanceBoard, this.name, values);
 
     async function verifyColumn(
       id: string,

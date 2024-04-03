@@ -1,0 +1,45 @@
+<div style="display: flex; justify-content: center">
+  <div
+    *ngIf="result"
+    style="
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin: 8px;
+      max-width: 350px;
+      width: 100%;
+    "
+  >
+    <img src="assets/logo.png" />
+    <h1>{{ result.group }}</h1>
+    <h2>שלום {{ result.name }}</h2>
+    <h3>סה"כ שעות: {{ totalHours() }}, מאושרות: {{ totalConfirmedHours() }}</h3>
+    <button mat-raised-button color="primary" (click)="addReport()">
+      דיווח חדש
+    </button>
+    <mat-list role="list">
+      <mat-list-item role="listitem" *ngFor="let h of result.hours">
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+
+            align-items: center;
+          "
+          [style.color]="h.confirmed ? 'green' : 'black'"
+        >
+          <div style="flex-grow: 1">
+            <span>{{ formatDate(h.date) }}</span> |
+            <span>{{ h.total }} שעות</span>
+          </div>
+
+          <button *ngIf="!h.confirmed" mat-icon-button (click)="confirm(h.id)">
+            <mat-icon>check</mat-icon>
+          </button>
+        </div>
+        <mat-divider> </mat-divider>
+      </mat-list-item>
+    </mat-list>
+  </div>
+</div>

@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { MatSelectModule } from '@angular/material/select';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -22,8 +22,14 @@ import { HomeComponent } from './home/home.component';
 import { YesNoQuestionComponent } from './common/yes-no-question/yes-no-question.component';
 import { InputAreaComponent } from './common/input-area/input-area.component';
 import { DialogService } from './common/dialog';
-import { AdminGuard } from "./users/AdminGuard";
+import { AdminGuard } from './users/AdminGuard';
 import { AttendanceComponent } from './attendance/attendance.component';
+import { MilgaiComponent } from './milgai/milgai.component';
+import { TestComponent } from './test/test.component';
+import {
+  CustomTimeInputComponent,
+  CustomTimeDataControlComponent,
+} from './custom-time-input/custom-time-input.component';
 
 @NgModule({
   declarations: [
@@ -32,12 +38,18 @@ import { AttendanceComponent } from './attendance/attendance.component';
     HomeComponent,
     YesNoQuestionComponent,
     InputAreaComponent,
-    AttendanceComponent
+    AttendanceComponent,
+    MilgaiComponent,
+    TestComponent,
+    CustomTimeInputComponent,
+    CustomTimeDataControlComponent,
   ],
   imports: [
     BrowserModule,
+    MatSelectModule,
     AppRoutingModule,
     FormsModule,
+    ReactiveFormsModule,
     MatSidenavModule,
     MatListModule,
     MatToolbarModule,
@@ -50,10 +62,10 @@ import { AttendanceComponent } from './attendance/attendance.component';
     MatButtonModule,
     MatIconModule,
     MatMenuModule,
-    RemultModule
+    RemultModule,
   ],
   providers: [DialogService, AdminGuard],
   bootstrap: [AppComponent],
-  entryComponents: [YesNoQuestionComponent, InputAreaComponent]
+  entryComponents: [YesNoQuestionComponent, InputAreaComponent],
 })
-export class AppModule { }
+export class AppModule {}

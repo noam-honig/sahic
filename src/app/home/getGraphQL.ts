@@ -275,3 +275,41 @@ query {
   }
   
 }`;
+
+export type InsertValues = Record<string, string | { checked?: boolean }>;
+
+export async function insertItem(
+  attendanceBoard: number,
+  name: string,
+  values: InsertValues
+) {
+  await gql(
+    `#graphql
+  mutation z($board: ID!, $name: String!, $values: JSON) {
+  create_item(board_id: $board, item_name: $name, column_values: $values) {
+    id
+    column_values {
+      id
+      value
+    }
+  }
+}`,
+    {
+      board: attendanceBoard!,
+      name: name,
+      values: JSON.stringify(values),
+    }
+  );
+}
+
+export class MondayDate {
+  date = '';
+  time = '';
+  static now(): MondayDate {
+    let d = new Date().toISOString();
+    return {
+      date: d.substring(0, 10),
+      time: d.substring(11, 19),
+    };
+  }
+}
