@@ -33,6 +33,9 @@ export async function gql(s: string, variables?: any, authorization?: string) {
         variables,
         JSON.stringify(data, undefined, 2)
       );
+      if (!data.message && data.error_message) {
+        throw Error(data.error_message);
+      }
       throw data || result.statusText;
     }
     return data.data;
