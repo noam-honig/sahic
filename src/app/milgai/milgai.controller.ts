@@ -3,6 +3,19 @@ import { MondayDate, gql, insertItem, update } from '../home/getGraphQL';
 const VolunteerHoursBoard = 6232066474;
 export class MilgaiController {
   @BackendMethod({ allowed: true })
+  static async deleteHour(id: number, hourId: number): Promise<MilgaiInfo> {
+    const info = await MilgaiController.getMilgaiInfo(id);
+    const hour = info.hours.find((h) => h.id == hourId);
+    if (!hour) throw 'שעה לא נמצאה';
+    if (hour.confirmed) throw 'שעה כבר אושרה';
+    const r = await gql(`mutation{
+      delete_item(item_id: ${hourId}) {
+        id
+      }
+    }`);
+    return MilgaiController.getMilgaiInfo(id);
+  }
+  @BackendMethod({ allowed: true })
   static async confirmHours(id: number, hourId: number, confirmId: string) {
     const info = await MilgaiController.getMilgaiInfo(id);
     const hour = info.hours.find((h) => h.id == hourId);

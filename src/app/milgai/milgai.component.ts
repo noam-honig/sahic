@@ -65,6 +65,15 @@ export class MilgaiComponent implements OnInit {
         })
     );
   }
+  async deleteIt(hour: MilgaiInfo['hours'][0]) {
+    if (
+      await this.ui.yesNoQuestion(
+        `האם למחוק ${hour.total} שעות מתאריך ${this.formatDate(hour.date)}?`
+      )
+    ) {
+      this.result = await MilgaiController.deleteHour(this.result!.id, hour.id);
+    }
+  }
   confirm(hourId: number) {
     var s = new stam();
     openDialog(

@@ -34,6 +34,9 @@
             <span>{{ h.total }} שעות</span>
           </div>
 
+          <button *ngIf="!h.confirmed" mat-icon-button (click)="deleteIt(h)">
+            <mat-icon>delete</mat-icon>
+          </button>
           <button *ngIf="!h.confirmed" mat-icon-button (click)="confirm(h.id)">
             <mat-icon>check</mat-icon>
           </button>
