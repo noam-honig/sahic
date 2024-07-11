@@ -147,11 +147,12 @@ export class AttendanceForm extends ControllerBase {
       title: string,
       column_type: 'date' | 'checkbox' | 'text' | 'numbers' | 'long_text'
     ) {
-      if (!columns.find((x) => x.id == id)) {
-        columns.push(
-          (
-            await gql(
-              `#graphql
+      try {
+        if (!columns.find((x) => x.id == id)) {
+          columns.push(
+            (
+              await gql(
+                `#graphql
     mutation ($board: ID!,$id:String!,$title:String!,$column_type:ColumnType!) {
       create_column(
         board_id: $board
@@ -165,14 +166,21 @@ export class AttendanceForm extends ControllerBase {
       }
     }
     `,
-              {
-                board: attendanceBoard,
-                id,
-                title,
-                column_type,
-              }
-            )
-          ).create_column
+                {
+                  board: attendanceBoard,
+                  id,
+                  title,
+                  column_type,
+                }
+              )
+            ).create_column
+          );
+        }
+      } catch (e: any) {
+        throw Error(
+          `Failed to add column for ${title} (id:${id}): ${
+            e?.message ?? e.toString()
+          }`
         );
       }
     }
