@@ -64,12 +64,13 @@ query($id:ID!,$stringId:CompareValue!)
     }
   }
   boards(ids: [${VolunteerHoursBoard}]) {
-    items_page(limit: 500) {
+    items_page(
       query_params: {rules: [{column_id: "${idColumn}", compare_value: $stringId}],
-      order_by:[{column_id:"date4" ,direction:desc}]}
+      order_by:[{column_id:"date4" ,direction:desc}]},
+      limit: 500
       
     ) {
-      items {
+      items  {
         id
         name
         column_values{
